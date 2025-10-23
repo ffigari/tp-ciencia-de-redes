@@ -4,13 +4,24 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 # ==========================
-# 1. Read CSV path from argv
+# 1. Read CSV path and optional sample percentage from argv
 # ==========================
 if len(sys.argv) < 2:
-    print("Usage: python build_bipartite_graph.py <path_to_csv>")
+    print("Usage: python build_bipartite_graph.py <path_to_csv> [sample_percentage]")
     sys.exit(1)
 
 csv_path = sys.argv[1]
+
+# Default sample percentage = 100%
+sample_percentage = 100
+if len(sys.argv) >= 3:
+    try:
+        sample_percentage = float(sys.argv[2])
+        if not (0 <= sample_percentage <= 100):
+            raise ValueError
+    except ValueError:
+        print("Error: sample_percentage must be a number between 0 and 100")
+        sys.exit(1)
 
 # ==========================
 # 2. Read dataset
@@ -22,8 +33,11 @@ except FileNotFoundError:
     sys.exit(1)
 
 # ==========================
-# 3. Create array of student nodes
+# 3. Sample students if needed
 # ==========================
+if sample_percentage < 100:
+    data = data.sample(frac=sample_percentage / 100, random_state=42).reset_index(drop=True)
+
 students = data["id"].astype(str).tolist()
 
 # ==========================
@@ -31,11 +45,9 @@ students = data["id"].astype(str).tolist()
 # ==========================
 class Attribute:
     def getName(self):
-        """Return the name of the attribute"""
         raise NotImplementedError
 
     def matchesStudent(self, student):
-        """Return True if this attribute applies to the student"""
         raise NotImplementedError
 
 
@@ -55,7 +67,6 @@ class HasBadSleep(Attribute):
     def matchesStudent(self, student):
         sleep = str(student["Sleep Duration"]).strip().replace("'", "")
         return sleep in ["Less than 5 hours", "5-6 hours"]
-
 
 # ==========================
 # 5. Instantiate attribute objects
