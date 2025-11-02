@@ -50,6 +50,140 @@ class Attribute:
     def matchesStudent(self, student):
         raise NotImplementedError
 
+# Función auxiliar para normalizar valores
+def normalize_value(value):
+    """Normaliza cualquier valor del dataset"""
+    if value is None:
+        return None
+    return str(value).strip().lower().replace("'", "").replace('"', '')
+
+# ===== Género =====
+
+class IsFemale(Attribute):
+    def getName(self):
+        return "Gender_Female"
+
+    def matchesStudent(self, student):
+        gender = normalize_value(student["Gender"])
+        return gender == "female"
+
+class IsMale(Attribute):
+    def getName(self):
+        return "Gender_Male"
+
+    def matchesStudent(self, student):
+        gender = normalize_value(student["Gender"])
+        return gender == "male"
+
+# ===== Edad =====
+
+class IsYoung(Attribute):
+    def getName(self):
+        return "Age_Young"
+    
+    def matchesStudent(self, student):
+        try:
+            age = float(student["Age"])
+            return 17 < age < 25
+        except (ValueError, TypeError):
+            return False
+
+class IsYoungAdult(Attribute):
+    def getName(self):
+        return "Age_Young_Adult"
+    
+    def matchesStudent(self, student):
+        try:
+            age = float(student["Age"])
+            return 24 < age < 40
+        except (ValueError, TypeError):
+            return False
+        
+class IsAdult(Attribute):
+    def getName(self):
+        return "Age_Adult"
+    
+    def matchesStudent(self, student):
+        try:
+            age = float(student["Age"])
+            return age >= 40
+        except (ValueError, TypeError):
+            return False
+        
+# ===== Presión Académica =====
+
+class HasLowAcademicPressure(Attribute):
+    def getName(self):
+        return "Low_Academic_Pressure"
+    
+    def matchesStudent(self, student):
+        try:
+            academicPressure = float(student["Academic Pressure"])
+            return academicPressure < 3.0
+        except (ValueError, TypeError):
+            return False
+
+class HasMediumAcademicPressure(Attribute):
+    def getName(self):
+        return "Medium_Academic_Pressure"
+    
+    def matchesStudent(self, student):
+        try:
+            academicPressure = float(student["Academic Pressure"])
+            return academicPressure == 3.0
+        except (ValueError, TypeError):
+            return False
+
+class HasHighAcademicPressure(Attribute):
+    def getName(self):
+        return "High_Academic_Pressure"
+    
+    def matchesStudent(self, student):
+        try:
+            academicPressure = float(student["Academic Pressure"])
+            return academicPressure > 3.0
+        except (ValueError, TypeError):
+            return False
+
+# ===== CGPA =====
+
+
+# ===== Satisfacción académica =====
+
+class HasLowStudySatisfaction(Attribute):
+    def getName(self):
+        return "Low_Study_Satisfaction"
+    
+    def matchesStudent(self, student):
+        try:
+            studySatisfaction = float(student["Study Satisfaction"])
+            return studySatisfaction < 3.0
+        except (ValueError, TypeError):
+            return False
+
+class HasMediumStudySatisfaction(Attribute):
+    def getName(self):
+        return "Medium_Study_Satisfaction"
+    
+    def matchesStudent(self, student):
+        try:
+            studySatisfaction = float(student["Study Satisfaction"])
+            return studySatisfaction == 3.0
+        except (ValueError, TypeError):
+            return False
+
+class HasHighStudySatisfaction(Attribute):
+    def getName(self):
+        return "High_Study_Satisfaction"
+    
+    def matchesStudent(self, student):
+        try:
+            studySatisfaction = float(student["Study Satisfaction"])
+            return studySatisfaction > 3.0
+        except (ValueError, TypeError):
+            return False
+
+# ===== Sueño =====
 
 class HasGoodSleep(Attribute):
     def getName(self):
@@ -68,10 +202,11 @@ class HasBadSleep(Attribute):
         sleep = str(student["Sleep Duration"]).strip().replace("'", "")
         return sleep in ["Less than 5 hours", "5-6 hours"]
 
+
 # ==========================
 # 5. Instantiate attribute objects
 # ==========================
-attributes = [HasGoodSleep(), HasBadSleep()]
+attributes = [HasGoodSleep(), HasBadSleep(), IsFemale(), IsMale(), IsYoung(), IsYoungAdult(), IsAdult(), HasLowAcademicPressure(), HasMediumAcademicPressure(), HasHighAcademicPressure(), HasLowStudySatisfaction(), HasMediumStudySatisfaction(), HasHighStudySatisfaction()]
 attribute_nodes = [attr.getName() for attr in attributes]
 
 # ==========================
