@@ -61,7 +61,7 @@ def normalize_value(value):
 
 class IsFemale(Attribute):
     def getName(self):
-        return "Gender_Female"
+        return "GenderFemale"
 
     def matchesStudent(self, student):
         gender = normalize_value(student["Gender"])
@@ -69,7 +69,7 @@ class IsFemale(Attribute):
 
 class IsMale(Attribute):
     def getName(self):
-        return "Gender_Male"
+        return "GenderMale"
 
     def matchesStudent(self, student):
         gender = normalize_value(student["Gender"])
@@ -79,7 +79,7 @@ class IsMale(Attribute):
 
 class IsYoung(Attribute):
     def getName(self):
-        return "Age_Young"
+        return "AgeYoung"
     
     def matchesStudent(self, student):
         try:
@@ -90,7 +90,7 @@ class IsYoung(Attribute):
 
 class IsYoungAdult(Attribute):
     def getName(self):
-        return "Age_Young_Adult"
+        return "AgeYoungAdult"
     
     def matchesStudent(self, student):
         try:
@@ -101,7 +101,7 @@ class IsYoungAdult(Attribute):
         
 class IsAdult(Attribute):
     def getName(self):
-        return "Age_Adult"
+        return "AgeAdult"
     
     def matchesStudent(self, student):
         try:
@@ -114,7 +114,7 @@ class IsAdult(Attribute):
 
 class HasLowAcademicPressure(Attribute):
     def getName(self):
-        return "Low_Academic_Pressure"
+        return "LowAcademicPressure"
     
     def matchesStudent(self, student):
         try:
@@ -125,7 +125,7 @@ class HasLowAcademicPressure(Attribute):
 
 class HasMediumAcademicPressure(Attribute):
     def getName(self):
-        return "Medium_Academic_Pressure"
+        return "MediumAcademicPressure"
     
     def matchesStudent(self, student):
         try:
@@ -136,7 +136,7 @@ class HasMediumAcademicPressure(Attribute):
 
 class HasHighAcademicPressure(Attribute):
     def getName(self):
-        return "High_Academic_Pressure"
+        return "HighAcademicPressure"
     
     def matchesStudent(self, student):
         try:
@@ -152,7 +152,7 @@ class HasHighAcademicPressure(Attribute):
 
 class HasLowStudySatisfaction(Attribute):
     def getName(self):
-        return "Low_Study_Satisfaction"
+        return "LowStudySatisfaction"
     
     def matchesStudent(self, student):
         try:
@@ -163,7 +163,7 @@ class HasLowStudySatisfaction(Attribute):
 
 class HasMediumStudySatisfaction(Attribute):
     def getName(self):
-        return "Medium_Study_Satisfaction"
+        return "MediumStudySatisfaction"
     
     def matchesStudent(self, student):
         try:
@@ -174,7 +174,7 @@ class HasMediumStudySatisfaction(Attribute):
 
 class HasHighStudySatisfaction(Attribute):
     def getName(self):
-        return "High_Study_Satisfaction"
+        return "HighStudySatisfaction"
     
     def matchesStudent(self, student):
         try:
@@ -201,12 +201,150 @@ class HasBadSleep(Attribute):
     def matchesStudent(self, student):
         sleep = str(student["Sleep Duration"]).strip().replace("'", "")
         return sleep in ["Less than 5 hours", "5-6 hours"]
+    
 
+# ===== Hábitos alimenticios =====
+
+class UnhealthyDiet(Attribute):
+    def getName(self):
+        return "UnhealthyDiet"
+    
+    def matchesStudent(self, student):
+        diet = str(student["Dietary Habits"]).strip().replace("'","")
+        return diet == "Unhealthy"
+    
+class HealthyDiet(Attribute):
+    def getName(self):
+        return "HealthyDiet"
+    
+    def matchesStudent(self, student):
+        diet = str(student["Dietary Habits"]).strip().replace("'","")
+        return diet == "Healthy"
+
+class ModerateDiet(Attribute):
+    def getName(self):
+        return "ModerateDiet"
+    
+    def matchesStudent(self, student):
+        diet = str(student["Dietary Habits"]).strip().replace("'","")
+        return diet == "Moderate"
+
+# ===== Horas de estudio =====
+
+class LowStudyHours(Attribute):
+    def getName(self):
+        return "LowStudyHours"
+    
+    def matchesStudent(self, student):
+        try:
+            studyHours = float(student["Work/Study Hours"])
+            return 0.0 <= studyHours < 3.0
+        except (ValueError, TypeError):
+            return False
+        
+class MediumLowStudyHours(Attribute):
+    def getName(self):
+        return "MediumLowStudyHours"
+    
+    def matchesStudent(self, student):
+        try:
+            studyHours = float(student["Work/Study Hours"])
+            return 3.0 <= studyHours < 6.0
+        except (ValueError, TypeError):
+            return False
+        
+class MediumHighStudyHours(Attribute):
+    def getName(self):
+        return "MediumHighStudyHours"
+    
+    def matchesStudent(self, student):
+        try:
+            studyHours = float(student["Work/Study Hours"])
+            return 6.0 <= studyHours < 9.0
+        except (ValueError, TypeError):
+            return False
+        
+class HighStudyHours(Attribute):
+    def getName(self):
+        return "HighStudyHours"
+    
+    def matchesStudent(self, student):
+        try:
+            studyHours = float(student["Work/Study Hours"])
+            return 9.0 <= studyHours <= 12.0
+        except (ValueError, TypeError):
+            return False
+
+# ===== Pensamientos suicidas =====
+
+class HasSuicidalThoughts(Attribute):
+    def getName(self):
+        return "HasSuicidalThoughts"
+    
+    def matchesStudent(self, student):
+        answer = str(student["Have you ever had suicidal thoughts ?"]).strip().replace("'","")
+        return answer == "Yes"
+    
+class HasNoSuicidalThoughts(Attribute):
+    def getName(self):
+        return "HasNoSuicidalThoughts"
+    
+    def matchesStudent(self, student):
+        answer = str(student["Have you ever had suicidal thoughts ?"]).strip().replace("'","")
+        return answer == "No"
+        
+# ===== Historial familiar de enfermedades mentales =====
+
+class HasFamilyHistoryOfMentalIllness(Attribute):
+    def getName(self):
+        return "HasFamilyHistoryOfMentalIllness"
+    
+    def matchesStudent(self, student):
+        answer = str(student["Family History of Mental Illness"]).strip().replace("'","")
+        return answer == "Yes"
+    
+class HasNoFamilyHistoryOfMentalIllness(Attribute):
+    def getName(self):
+        return "HasNoFamilyHistoryOfMentalIllness"
+    
+    def matchesStudent(self, student):
+        answer = str(student["Family History of Mental Illness"]).strip().replace("'","")
+        return answer == "No"
+    
+# ===== Depresión =====
+
+class IsDepressed(Attribute):
+    def getName(self):
+        return "IsDepressed"
+    
+    def matchesStudent(self, student):
+        answer = str(student["Depression"]).strip().replace("'","")
+        return answer == "Yes"
+    
+class IsNotDepressed(Attribute):
+    def getName(self):
+        return "IsNotDepressed"
+    
+    def matchesStudent(self, student):
+        answer = str(student["Depression"]).strip().replace("'","")
+        return answer == "No"
+
+# REVISAR: FALTAN ATRIBUTOS DE CITY, DEGREE Y CGPA
 
 # ==========================
 # 5. Instantiate attribute objects
 # ==========================
-attributes = [HasGoodSleep(), HasBadSleep(), IsFemale(), IsMale(), IsYoung(), IsYoungAdult(), IsAdult(), HasLowAcademicPressure(), HasMediumAcademicPressure(), HasHighAcademicPressure(), HasLowStudySatisfaction(), HasMediumStudySatisfaction(), HasHighStudySatisfaction()]
+attributes = [HasGoodSleep(), HasBadSleep(),                                                                # Atributos de sueño
+              IsFemale(), IsMale(),                                                                         # Atributos de género
+              IsYoung(), IsYoungAdult(), IsAdult(),                                                         # Atributos de edad
+              HasLowAcademicPressure(), HasMediumAcademicPressure(), HasHighAcademicPressure(),             # Atributos de presión académica
+              HasLowStudySatisfaction(), HasMediumStudySatisfaction(), HasHighStudySatisfaction(),          # Atributos de satisfacción académica
+              UnhealthyDiet(), HealthyDiet(), ModerateDiet(),                                               # Atributos de hábitos alimenticios
+              LowStudyHours(), MediumLowStudyHours(), MediumHighStudyHours(), HighStudyHours(),             # Atributos de horas de estudio
+              HasSuicidalThoughts(), HasNoSuicidalThoughts(),                                               # Atributos de pensamientos suicidas
+              HasFamilyHistoryOfMentalIllness(), HasNoFamilyHistoryOfMentalIllness(),                       # Atributos de historial de enfermedad mental en la familia
+              IsDepressed(), IsNotDepressed()]
+
 attribute_nodes = [attr.getName() for attr in attributes]
 
 # ==========================
